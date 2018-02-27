@@ -5,16 +5,22 @@ from string import punctuation
 
 class PoetryBot:
 
-    corpus = {}
-    filePath = ''
-
     def __init__( self, filePath  ):
-        self.filePath = filePath
-        self.createDictionary()
+        self.corpus = {}
+        self.addToCorpus( filePath )
 
-    def processSourceText( self ):
+    def addToCorpus( self, filePath ):
+        poemAsLines = self.processSourceText( filePath )
+        for line in poemAsLines:
+            word = iter( line )
+            current = word.next()
+            for nextWord in word:
+                self.corpus.setdefault(current.lower(), []).append( nextWord )
+                current = nextWord
+
+    def processSourceText( self, filePath ):
         poemAsLines = []
-        data = json.load( open( self.filePath ) )
+        data = json.load( open( filePath ) )
         for poem in data:
             lines = poem['text']
             for line in lines:
@@ -24,17 +30,6 @@ class PoetryBot:
                     newline.append( '*e*' )
                     poemAsLines.append( newline )
         return poemAsLines
-
-    def createDictionary( self ):
-        poemAsLines = self.processSourceText()
-        corpus = {}
-        for line in poemAsLines:
-            word = iter( line )
-            current = word.next()
-            for nextWord in word:
-                corpus.setdefault(current.lower(), []).append( nextWord )
-                current = nextWord
-        self.corpus = corpus
 
     def generateLine( self ):
         poemLine = []
@@ -52,7 +47,8 @@ class PoetryBot:
                 print line.strip( punctuation )
             print ''
 
-poetryGenerator = PoetryBot('angelou.json')
-poetryGenerator.generatePoem(2, 8)
+poetryGenerator = PoetryBot('shelley.json')
+poetryGenerator.generatePoem(1, 10)
+poetryGenerator.generatePoem(2, 4)
 
 
