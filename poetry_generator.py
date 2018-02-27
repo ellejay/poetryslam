@@ -1,6 +1,5 @@
 import json
 import random
-from pprint import pprint
 from string import punctuation
 
 class PoetryBot:
@@ -31,14 +30,6 @@ class PoetryBot:
                     poemAsLines.append( newline )
         return poemAsLines
 
-    def generateLine( self ):
-        poemLine = []
-        poemLine.append( random.choice( self.corpus['*s*'] ).capitalize() )
-        while poemLine[-1] != '*e*':
-            poemLine.append( random.choice( self.corpus[ poemLine[-1].lower() ] ) )
-        poemLine = poemLine[:-1]
-        return poemLine
-
     def generatePoem( self, stanzas, lines ):
         poem = []
         for x in range( 0, stanzas ):
@@ -46,6 +37,14 @@ class PoetryBot:
                 line = ' '.join( self.generateLine() )
                 print line.strip( punctuation )
             print ''
+
+    def generateLine( self ):
+        poemLine = []
+        poemLine.append( random.choice( self.corpus['*s*'] ).capitalize() )
+        while poemLine[-1] != '*e*':
+            poemLine.append( random.choice( self.corpus[ poemLine[-1].lower() ] ) )
+        poemLine = poemLine[:-1]
+        return poemLine
 
 poetryGenerator = PoetryBot('shelley.json')
 poetryGenerator.generatePoem(1, 10)
